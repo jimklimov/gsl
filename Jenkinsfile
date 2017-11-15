@@ -43,13 +43,12 @@ pipeline {
         success {
             script {
                 if ( (params["DEPLOY_JOB_NAME"] != "") && (params["DEPLOY_BRANCH_PATTERN"] != "") ) {
-                    GIT_BRANCH = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
-                    if ( GIT_BRANCH =~ params["DEPLOY_BRANCH_PATTERN"] ) {
-                        GIT_URL = sh(returnStdout: true, script: """git remote -v | egrep '^origin' | awk '{print \$2}'""").trim()
+                    if ( env.BRANCH_NAME =~ params["DEPLOY_BRANCH_PATTERN"] ) {
+                        GIT_URL = sh(returnStdout: true, script: """git remote -v | egrep '^origin' | awk '{print \$2}' | head -1""").trim()
                         GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --verify HEAD').trim()
                         build job: "${params["DEPLOY_JOB_NAME"]}", parameters: [
                             string(name: 'DEPLOY_GIT_URL', value: "${GIT_URL}"),
-                            string(name: 'DEPLOY_GIT_BRANCH', value: "${GIT_BRANCH}"),
+                            string(name: 'DEPLOY_GIT_BRANCH', value: env.BRANCH_NAME),
                             string(name: 'DEPLOY_GIT_COMMIT', value: "${GIT_COMMIT}")]
                     }
                 }
