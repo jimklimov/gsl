@@ -49,7 +49,7 @@ pipeline {
                                 string(name: 'DEPLOY_GIT_URL', value: "${GIT_URL}"),
                                 string(name: 'DEPLOY_GIT_BRANCH', value: env.BRANCH_NAME),
                                 string(name: 'DEPLOY_GIT_COMMIT', value: "${GIT_COMMIT}")
-                                ], quietPeriod: 0, wait: false
+                                ], quietPeriod: 0, wait: true, propagate: true
                         } else {
                             echo "Not deploying because branch '${env.BRANCH_NAME}' did not match filter '${params.DEPLOY_BRANCH_PATTERN}'"
                         }
