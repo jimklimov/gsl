@@ -26,7 +26,7 @@ pipeline {
             steps {
                 dir ('src') {
                     sh 'CCACHE_BASEDIR="`pwd`" ; export CCACHE_BASEDIR; make test'
-                    sh 'echo "Are GitIgnores good after make test? (should have no output below)"; git status -s || true'
+                    // The test is trivial (run the binary to see if it works and prints the version), no git status to validate
                 }
             }
         }
