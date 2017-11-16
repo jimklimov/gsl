@@ -50,7 +50,11 @@ pipeline {
                             string(name: 'DEPLOY_GIT_URL', value: "${GIT_URL}"),
                             string(name: 'DEPLOY_GIT_BRANCH', value: env.BRANCH_NAME),
                             string(name: 'DEPLOY_GIT_COMMIT', value: "${GIT_COMMIT}")]
+                    } else {
+                        echo "Not deploying because branch '${env.BRANCH_NAME}' did not match filter '${params.DEPLOY_BRANCH_PATTERN}'"
                     }
+                } else {
+                    echo "Not deploying because deploy-job parameters are not set"
                 }
             }
         }
