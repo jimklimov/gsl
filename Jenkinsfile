@@ -2,8 +2,8 @@ pipeline {
     agent { label "linux || macosx || windows" }
     parameters {
         string (
-            defaultValue: '^(master)$',
-            description: 'Regular expression of branch names for which a deploy action would be attempted after a successful build and test; leave empty to not deploy',
+            defaultValue: '',
+            description: 'Regular expression of branch names for which a deploy action would be attempted after a successful build and test; leave empty to not deploy. Reasonable value is ^(master|release/)$',
             name : 'DEPLOY_BRANCH_PATTERN')
         string (
             defaultValue: '',
