@@ -38,24 +38,24 @@ pipeline {
                 }
             }
         }
-    }
-    post {
-        success {
-            script {
-                if ( (params["DEPLOY_JOB_NAME"] != "") && (params["DEPLOY_BRANCH_PATTERN"] != "") ) {
-                    if ( env.BRANCH_NAME =~ params["DEPLOY_BRANCH_PATTERN"] ) {
-                        GIT_URL = sh(returnStdout: true, script: """git remote -v | egrep '^origin' | awk '{print \$2}' | head -1""").trim()
-                        GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --verify HEAD').trim()
-                        build job: "${params["DEPLOY_JOB_NAME"]}", parameters: [
-                            string(name: 'DEPLOY_GIT_URL', value: "${GIT_URL}"),
-                            string(name: 'DEPLOY_GIT_BRANCH', value: env.BRANCH_NAME),
-                            string(name: 'DEPLOY_GIT_COMMIT', value: "${GIT_COMMIT}")
-                            ], quietPeriod: 0, wait: false
+        stage ('deploy if appropriate') {
+            steps {
+                script {
+                    if ( (params["DEPLOY_JOB_NAME"] != "") && (params["DEPLOY_BRANCH_PATTERN"] != "") ) {
+                        if ( env.BRANCH_NAME =~ params["DEPLOY_BRANCH_PATTERN"] ) {
+                            GIT_URL = sh(returnStdout: true, script: """git remote -v | egrep '^origin' | awk '{print \$2}' | head -1""").trim()
+                            GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --verify HEAD').trim()
+                            build job: "${params["DEPLOY_JOB_NAME"]}", parameters: [
+                                string(name: 'DEPLOY_GIT_URL', value: "${GIT_URL}"),
+                                string(name: 'DEPLOY_GIT_BRANCH', value: env.BRANCH_NAME),
+                                string(name: 'DEPLOY_GIT_COMMIT', value: "${GIT_COMMIT}")
+                                ], quietPeriod: 0, wait: false
+                        } else {
+                            echo "Not deploying because branch '${env.BRANCH_NAME}' did not match filter '${params.DEPLOY_BRANCH_PATTERN}'"
+                        }
                     } else {
-                        echo "Not deploying because branch '${env.BRANCH_NAME}' did not match filter '${params.DEPLOY_BRANCH_PATTERN}'"
+                        echo "Not deploying because deploy-job parameters are not set"
                     }
-                } else {
-                    echo "Not deploying because deploy-job parameters are not set"
                 }
             }
         }
