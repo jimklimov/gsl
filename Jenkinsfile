@@ -9,6 +9,10 @@ pipeline {
             defaultValue: '',
             description: 'Name of your job that handles deployments and should accept arguments: DEPLOY_GIT_URL DEPLOY_GIT_BRANCH DEPLOY_GIT_COMMIT -- and it is up to that job what to do with this knowledge (e.g. git archive + push to packaging); leave empty to not deploy',
             name : 'DEPLOY_JOB_NAME')
+        booleanParam (
+            defaultValue: true,
+            description: 'If the deployment is done, should THIS job wait for it to complete and include its success or failure as the build result (true), or should it schedule the job and exit quickly to free up the executor (false)',
+            name: 'DEPLOY_REPORT_RESULT')
     }
     triggers {
         pollSCM 'H/5 * * * *'
@@ -49,7 +53,7 @@ pipeline {
                                 string(name: 'DEPLOY_GIT_URL', value: "${GIT_URL}"),
                                 string(name: 'DEPLOY_GIT_BRANCH', value: env.BRANCH_NAME),
                                 string(name: 'DEPLOY_GIT_COMMIT', value: "${GIT_COMMIT}")
-                                ], quietPeriod: 0, wait: true, propagate: true
+                                ], quietPeriod: 0, wait: params.DEPLOY_REPORT_RESULT, propagate: params.DEPLOY_REPORT_RESULT
                         } else {
                             echo "Not deploying because branch '${env.BRANCH_NAME}' did not match filter '${params.DEPLOY_BRANCH_PATTERN}'"
                         }
