@@ -1,12 +1,16 @@
 pipeline {
     agent { label "linux || macosx || windows" }
     parameters {
+        // Use DEFAULT_DEPLOY_BRANCH_PATTERN and DEFAULT_DEPLOY_JOB_NAME if
+        // defined in this jenkins setup -- in Jenkins Management Web-GUI
+        // see Configure System / Global properties / Environment variables
+        // Default (if unset) is empty => no deployment attempt after good test
         string (
-            defaultValue: '',
+            defaultValue: '${DEFAULT_DEPLOY_BRANCH_PATTERN}',
             description: 'Regular expression of branch names for which a deploy action would be attempted after a successful build and test; leave empty to not deploy. Reasonable value is ^(master|release/)$',
             name : 'DEPLOY_BRANCH_PATTERN')
         string (
-            defaultValue: '',
+            defaultValue: '${DEFAULT_DEPLOY_JOB_NAME}',
             description: 'Name of your job that handles deployments and should accept arguments: DEPLOY_GIT_URL DEPLOY_GIT_BRANCH DEPLOY_GIT_COMMIT -- and it is up to that job what to do with this knowledge (e.g. git archive + push to packaging); leave empty to not deploy',
             name : 'DEPLOY_JOB_NAME')
         booleanParam (
