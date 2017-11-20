@@ -7,7 +7,7 @@ pipeline {
         // Default (if unset) is empty => no deployment attempt after good test
         string (
             defaultValue: '${DEFAULT_DEPLOY_BRANCH_PATTERN}',
-            description: 'Regular expression of branch names for which a deploy action would be attempted after a successful build and test; leave empty to not deploy. Reasonable value is ^(master|release/)$',
+            description: 'Regular expression of branch names for which a deploy action would be attempted after a successful build and test; leave empty to not deploy. Reasonable value is ^(master|release/.*|feature/*)$',
             name : 'DEPLOY_BRANCH_PATTERN')
         string (
             defaultValue: '${DEFAULT_DEPLOY_JOB_NAME}',
