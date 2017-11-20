@@ -51,7 +51,7 @@ pipeline {
                 script {
                     def myDEPLOY_JOB_NAME = sh(returnStdout: true, script: """echo "${params["DEPLOY_JOB_NAME"]}" """).trim();
                     def myDEPLOY_BRANCH_PATTERN = sh(returnStdout: true, script: """echo "${params["DEPLOY_BRANCH_PATTERN"]}" """).trim();
-                    echo "DEPLOY_JOB_NAME : params["DEPLOY_JOB_NAME"] DEPLOY_BRANCH_PATTERN : params["DEPLOY_BRANCH_PATTERN"] DEPLOY_REPORT_RESULT : params["DEPLOY_REPORT_RESULT"]"
+                    echo "DEPLOY_JOB_NAME : ${params["DEPLOY_JOB_NAME"]} DEPLOY_BRANCH_PATTERN : ${params["DEPLOY_BRANCH_PATTERN"]} DEPLOY_REPORT_RESULT : ${params["DEPLOY_REPORT_RESULT"]}"
                     echo "myDEPLOY_JOB_NAME:${myDEPLOY_JOB_NAME} myDEPLOY_BRANCH_PATTERN:${myDEPLOY_BRANCH_PATTERN}"
                     if ( (myDEPLOY_JOB_NAME != "") && (myDEPLOY_BRANCH_PATTERN != "") ) {
                         if ( env.BRANCH_NAME =~ myDEPLOY_BRANCH_PATTERN ) {
@@ -63,7 +63,7 @@ pipeline {
                                 string(name: 'DEPLOY_GIT_COMMIT', value: "${GIT_COMMIT}")
                                 ], quietPeriod: 0, wait: myDEPLOY_REPORT_RESULT, propagate: myDEPLOY_REPORT_RESULT
                         } else {
-                            echo "Not deploying because branch '${env.BRANCH_NAME}' did not match filter 'myDEPLOY_BRANCH_PATTERN'"
+                            echo "Not deploying because branch '${env.BRANCH_NAME}' did not match filter '${myDEPLOY_BRANCH_PATTERN}'"
                         }
                     } else {
                         echo "Not deploying because deploy-job parameters are not set"
