@@ -1,5 +1,5 @@
 pipeline {
-    agent { label "linux || macosx || windows" }
+    agent { label "linux || macosx || bsd || solaris || windows || posix" }
     parameters {
         // Use DEFAULT_DEPLOY_BRANCH_PATTERN and DEFAULT_DEPLOY_JOB_NAME if
         // defined in this jenkins setup -- in Jenkins Management Web-GUI
